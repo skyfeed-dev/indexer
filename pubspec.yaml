@@ -7,8 +7,7 @@ environment:
   sdk: '>=3.0.0 <4.0.0'
 
 dependencies:
-  lib5:
-    git: https://github.com/s5-dev/lib5.git
+  lib5: ^0.1.0
   surrealdb:
     git: https://github.com/redsolver/surrealdb_flutter.git
   messagepack:
@@ -24,6 +23,9 @@ dependencies:
   thirds: ^0.2.0-alpha.1
   dotenv: ^4.1.0
   logger: ^1.3.0
+  
+dependency_overrides: 
+  http: 1.0.0
 
 dev_dependencies:
   lints: ^2.0.0
