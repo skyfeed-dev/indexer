@@ -10,8 +10,6 @@ dependencies:
   lib5: ^0.1.0
   surrealdb:
     git: https://github.com/redsolver/surrealdb_flutter.git
-  messagepack:
-    git: https://github.com/redsolver/messagepack.git
   cbor: ^5.1.2
   web_socket_channel: ^2.4.0
   crypto: ^3.0.3
@@ -23,6 +21,7 @@ dependencies:
   thirds: ^0.2.0-alpha.1
   dotenv: ^4.1.0
   logger: ^1.3.0
+  s5_msgpack: ^0.3.0
   
 dependency_overrides: 
   http: 1.0.0

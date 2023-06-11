@@ -313,15 +313,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.12.15"
-  messagepack:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: HEAD
-      resolved-ref: "89910d0375f37077bc3cd949760a1a62a0d2ceb9"
-      url: "https://github.com/redsolver/messagepack.git"
-    source: git
-    version: "0.2.0"
   meta:
     dependency: transitive
     description:
@@ -411,7 +402,7 @@ packages:
     source: hosted
     version: "3.1.0+2"
   s5_msgpack:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: s5_msgpack
       sha256: "6308b2a59c760aff1c43dff1dc0c3c332378dd73c93f0cadfea37961aee5a46f"
