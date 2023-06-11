@@ -12,7 +12,7 @@ class Surreal {
       env['SURREAL_URL']!,
       onError: (e) => logger.e(e),
       options: SurrealDBOptions(
-        timeoutDuration: Duration(minutes: 60),
+        timeoutDuration: Duration(hours: 24 * 365 * 10),
       ),
     );
     db.connect();

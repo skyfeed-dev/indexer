@@ -119,7 +119,7 @@ Future<void> processMessage(Map header, Map obj) async {
   final cursor = obj['seq'] as int;
 
   messageCounter++;
-  if (messageCounter % 100 == 0) {
+  if (messageCounter % 1000 == 0) {
     Future.delayed(Duration(seconds: 30)).then((value) {
       surreal.db.update(
         'cursor:`bsky.social`',
