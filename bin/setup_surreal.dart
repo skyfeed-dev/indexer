@@ -58,6 +58,9 @@ DEFINE FIELD mentions.* ON TABLE post TYPE record(did);
 DEFINE FIELD links ON TABLE post TYPE option<array>;
 DEFINE FIELD links.* ON TABLE post TYPE record(link);
 
+DEFINE FIELD langs ON TABLE post TYPE option<array>;
+DEFINE FIELD langs.* ON TABLE post TYPE string;
+
 DEFINE TABLE like_count_view AS
 SELECT
   count() AS likeCount,

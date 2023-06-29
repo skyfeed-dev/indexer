@@ -72,10 +72,15 @@ Future<void> processGraphOperation(
           block.remove('reply');
         }
 
+        if (block['langs'] != null) {
+          post['langs'] = block['langs'];
+          block.remove('langs');
+        }
+
         if (block['embed'] != null) {
           if (block['embed']['images'] != null ||
               block['embed']['media']?['images'] != null) {
-            post['images'] ??= [];            
+            post['images'] ??= [];
             for (final image in (block['embed']?['images'] ??
                 block['embed']['media']['images'])) {
               final blob = prepareBlob(surreal, image['image']);
