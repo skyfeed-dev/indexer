@@ -227,7 +227,7 @@ Future<void> processGraphOperation(
         surreal.db.query(
           "DELETE replies:${didToKey(repo, false)}_$rkey;",
         );
-      } else if (recordType == 'app.bsky.feed.listitem') {
+      } else if (recordType == 'app.bsky.graph.listitem') {
         surreal.db.query(
           "DELETE listitem:${didToKey(repo, false)}_$rkey;",
         );
