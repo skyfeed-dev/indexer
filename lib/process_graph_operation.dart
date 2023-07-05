@@ -252,13 +252,13 @@ Future<void> processGraphOperation(
 
 String getCreatedAt(Map record) {
   final dtStr = record['createdAt'];
-  final dt = DateTime.parse(dtStr);
+  final dt = DateTime.parse(dtStr).toUtc();
   if (dt.isAfter(DateTime.now().toUtc().add(Duration(seconds: 60)))) {
     final newStr = DateTime.now().toUtc().toIso8601String();
     logger.v('overriding timestamp $dtStr -> $newStr');
     return newStr;
   }
-  return dtStr;
+  return dt.toIso8601String();
 }
 
 void addLinkSafe(Map post, String? link) {
