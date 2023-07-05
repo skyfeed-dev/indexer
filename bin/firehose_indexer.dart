@@ -35,12 +35,12 @@ void main(List<String> arguments) async {
 
   var channel = WebSocketChannel.connect(Uri.parse(uri));
 
-  channel.stream.listen((msg) {
+  channel.stream.listen((msg) async {
     final message = msg as Uint8List;
 
     final data = simple.cbor.decode([0x82] + message) as List;
     try {
-      processMessage(data[0] as Map, data[1] as Map);
+      await processMessage(data[0] as Map, data[1] as Map);
     } catch (e, st) {
       logger.e('Processing event ${json.encode(data)} failed', e, st);
     }
