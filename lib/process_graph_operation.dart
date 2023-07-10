@@ -253,11 +253,14 @@ Future<void> processGraphOperation(
 String getCreatedAt(Map record) {
   final dtStr = record['createdAt'];
   final dt = DateTime.parse(dtStr).toUtc();
-  if (dt.isAfter(DateTime.now().toUtc().add(Duration(seconds: 60)))) {
-    final newStr = DateTime.now().toUtc().toIso8601String();
+
+  final now = DateTime.now().toUtc();
+  if (dt.isAfter(now.add(Duration(seconds: 60)))) {
+    final newStr = now.toIso8601String();
     logger.v('overriding timestamp $dtStr -> $newStr');
     return newStr;
   }
+
   return dt.toIso8601String();
 }
 
