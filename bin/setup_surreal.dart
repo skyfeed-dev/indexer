@@ -67,4 +67,22 @@ SELECT
   out as subject
   FROM like
   GROUP BY out
-;''';
+;
+
+DEFINE TABLE repost_count_view AS
+SELECT
+  count() AS repostCount,
+  out as subject
+  FROM repost
+  GROUP BY out
+;
+
+DEFINE TABLE reply_count_view AS
+SELECT
+  count() AS replyCount,
+  out as subject
+  FROM replyto
+  GROUP BY out
+;
+
+''';

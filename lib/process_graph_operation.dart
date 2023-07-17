@@ -99,6 +99,10 @@ Future<void> processGraphOperation(
                     ?['uri'] ??
                 block['embed']['record']['record']['uri']);
 
+            surreal.db.query(
+              "RELATE $id->quote->${post['record']} CONTENT { createdAt: '${getCreatedAt(post)}', id: '${didToKey(repo, false)}_$rkey' };",
+            );
+
             block['embed'].remove('record');
             block['embed'].remove('\$type');
           }
@@ -160,6 +164,10 @@ Future<void> processGraphOperation(
           surreal.db.query(
             "RELATE ${didToKey(repo)}->replies->$id CONTENT { createdAt: '${getCreatedAt(post)}', id: '${didToKey(repo, false)}_$rkey' };",
           );
+
+          surreal.db.query(
+            "RELATE $id->replyto->${post['parent']} CONTENT { createdAt: '${getCreatedAt(post)}', id: '${didToKey(repo, false)}_$rkey' };",
+          );
         } else {
           surreal.db.query(
             "RELATE ${didToKey(repo)}->posts->$id CONTENT { createdAt: '${getCreatedAt(post)}', id: '${didToKey(repo, false)}_$rkey' };",
@@ -195,6 +203,8 @@ Future<void> processGraphOperation(
         surreal.db.query(
           "RELATE ${atUriToListId(block['list'])}->listitem->${didToKey(subjectDID)} CONTENT { createdAt: '${getCreatedAt(block)}', id: '${didToKey(repo, false)}_$rkey' };",
         );
+        final listId = atUriToListId(block['list']);
+        surreal.db.update(listId, {});
       } else {
         logger.w('could not process $repo $action $recordType $rkey');
       }
@@ -226,6 +236,12 @@ Future<void> processGraphOperation(
         );
         surreal.db.query(
           "DELETE replies:${didToKey(repo, false)}_$rkey;",
+        );
+        surreal.db.query(
+          "DELETE replyto:${didToKey(repo, false)}_$rkey;",
+        );
+        surreal.db.query(
+          "DELETE quote:${didToKey(repo, false)}_$rkey;",
         );
       } else if (recordType == 'app.bsky.graph.listitem') {
         surreal.db.query(
@@ -341,19 +357,19 @@ String? prepareBlob(Surreal surreal, Map? blob) {
 }
 
 String? prepareLink(Surreal surreal, String link) {
-  final uri = Uri.parse(link);
   if (link.contains('`')) {
     throw 'Invalid link $link';
   }
   final id = '`$link`';
 
+  /* final uri = Uri.parse(link);
   surreal.db.update('link:$id', {
     'scheme': uri.scheme,
     'authority': uri.authority,
     'path': uri.path,
     'query': uri.query,
     'fragment': uri.fragment,
-  });
+  }); */
 
   return 'link:$id';
 }
