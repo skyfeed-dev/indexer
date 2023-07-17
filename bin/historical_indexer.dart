@@ -58,6 +58,14 @@ void main(List<String> args) async {
     await Future.delayed(Duration(milliseconds: 130));
   }
   print('Starting indexer...');
+  final progressCursorFile = File('historical_indexer_progress_cursor');
+
+  String? progressCursor;
+
+  if (progressCursorFile.existsSync()) {
+    progressCursor = progressCursorFile.readAsStringSync();
+    print('Found progress cursor, continuing at "$progressCursor"');
+  }
 
   int i = 0;
 
@@ -74,7 +82,22 @@ void main(List<String> args) async {
     reqs = 0;
   });
 
+  bool skip = progressCursor != null;
+
   for (final did in allDIDs) {
+    if (skip) {
+      if (progressCursor == did) {
+        skip = false;
+      } else {
+        continue;
+      }
+    } else {
+      if (i % 500 == 200) {
+        Future.delayed(Duration(seconds: 60 * 5)).then((value) {
+          progressCursorFile.writeAsStringSync(did);
+        });
+      }
+    }
     i++;
     print(
       '[${(i / allDIDs.length).toStringAsFixed(2)}] $did (delay: $extraDelayMillis)',
