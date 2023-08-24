@@ -31,13 +31,6 @@ DEFINE FIELD mediaType ON TABLE blob TYPE string;
 DEFINE FIELD mediaSubtype ON TABLE blob TYPE string;
 DEFINE FIELD size ON TABLE blob TYPE option<int>;
 
-DEFINE TABLE link SCHEMAFULL;
-DEFINE FIELD scheme ON TABLE link TYPE string;
-DEFINE FIELD authority ON TABLE link TYPE string;
-DEFINE FIELD path ON TABLE link TYPE string;
-DEFINE FIELD query ON TABLE link TYPE string;
-DEFINE FIELD fragment ON TABLE link TYPE string;
-
 DEFINE TABLE post SCHEMAFULL;
 DEFINE FIELD text ON TABLE post TYPE string;
 DEFINE FIELD createdAt ON TABLE post TYPE datetime;
@@ -56,33 +49,41 @@ DEFINE FIELD record ON TABLE post TYPE option<record>;
 DEFINE FIELD mentions ON TABLE post TYPE option<array>;
 DEFINE FIELD mentions.* ON TABLE post TYPE record(did);
 DEFINE FIELD links ON TABLE post TYPE option<array>;
-DEFINE FIELD links.* ON TABLE post TYPE record(link);
+DEFINE FIELD links.* ON TABLE post TYPE string;
 
 DEFINE FIELD langs ON TABLE post TYPE option<array>;
 DEFINE FIELD langs.* ON TABLE post TYPE string;
 
+DEFINE FIELD labels ON TABLE post TYPE option<array>;
+DEFINE FIELD labels.* ON TABLE post TYPE string;
+
 DEFINE TABLE like_count_view AS
 SELECT
-  count() AS likeCount,
-  out as subject
+  count() AS c
   FROM like
   GROUP BY out
 ;
 
 DEFINE TABLE repost_count_view AS
 SELECT
-  count() AS repostCount,
-  out as subject
+  count() AS c
   FROM repost
   GROUP BY out
 ;
 
 DEFINE TABLE reply_count_view AS
 SELECT
-  count() AS replyCount,
-  out as subject
+  count() AS c
   FROM replyto
   GROUP BY out
 ;
 
 ''';
+
+
+/* DEFINE TABLE link SCHEMAFULL;
+DEFINE FIELD scheme ON TABLE link TYPE string;
+DEFINE FIELD authority ON TABLE link TYPE string;
+DEFINE FIELD path ON TABLE link TYPE string;
+DEFINE FIELD query ON TABLE link TYPE string;
+DEFINE FIELD fragment ON TABLE link TYPE string; */

@@ -107,6 +107,7 @@ Future<void> processMessage(Map header, Map obj) async {
       parts[1],
       block,
       surreal: surreal,
+      doRethrow: false,
     );
   }
 

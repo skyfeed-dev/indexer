@@ -31,11 +31,11 @@ String didToKey(String did, [bool full = true]) {
   } else if (did.startsWith('did:web:')) {
     val = 'web_${did.substring(8).replaceAll('.', '_').replaceAll('-', '__')}';
   } else {
-    throw 'Invalid DID $did';
+    throw 'Invalid DID $did *IGNORE*';
   }
 
   if (!validDidKeyRegex.hasMatch(val)) {
-    throw 'Found invalid DID: $did $full $val';
+    throw 'Found invalid DID: $did $full $val *IGNORE*';
   }
 
   if (full) {

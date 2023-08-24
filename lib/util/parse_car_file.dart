@@ -24,12 +24,18 @@ Map<Multihash, Map> parseCARFile(Uint8List bytes) {
     final cid = Multihash(bytes.sublist(cursor, cursor + cidV1BytesLength));
 
     cursor += cidV1BytesLength;
+    try {
+      final data = simple.cbor.decode(
+              bytes.sublist(cursor, cursor + blockLength - cidV1BytesLength))
+          as Map;
+      cursor += blockLength - cidV1BytesLength;
 
-    final data = simple.cbor.decode(
-        bytes.sublist(cursor, cursor + blockLength - cidV1BytesLength)) as Map;
-    cursor += blockLength - cidV1BytesLength;
-
-    blocks[cid] = data;
+      blocks[cid] = data;
+    } catch (e, st) {
+      // TODO Handle error properly (retr0id case)
+      print(e);
+      print(st);
+    }
   }
 
   return blocks;
