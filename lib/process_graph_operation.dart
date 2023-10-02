@@ -148,6 +148,7 @@ Future<void> processGraphOperation(
             block.remove('embed');
           }
         }
+        final tags = <String>{};
         if (block['facets'] != null) {
           for (final facet in block['facets']) {
             for (final feature in facet['features']) {
@@ -156,13 +157,27 @@ Future<void> processGraphOperation(
                 post['mentions'].add(didToKey(feature['did']));
               } else if (feature['\$type'] == 'app.bsky.richtext.facet#link') {
                 addLinkSafe(post, prepareLink(surreal, feature['uri']));
+              } else if (feature['\$type'] == 'app.bsky.richtext.facet#tag') {
+                tags.add(feature['tag']);
               } else {
-                throw 'unknown feature $feature *IGNORE*';
+                print('unknown feature $post $feature *IGNORE*');
               }
             }
           }
           block.remove('facets');
         }
+
+        if (block['tags'] != null) {
+          for (final tag in block['tags']) {
+            tags.add(tag);
+          }
+          block.remove('tags');
+        }
+
+        if (tags.isNotEmpty) {
+          post['tags'] = tags.toList();
+        }
+
         if (block['entities'] != null) {
           for (final entity in block['entities']) {
             if (entity['type'] == 'link') {
@@ -175,7 +190,7 @@ Future<void> processGraphOperation(
                 continue;
               }
             } else {
-              throw 'unkown $block *IGNORE*';
+              // throw 'unkown $block *IGNORE*';
             }
           }
           block.remove('entities');

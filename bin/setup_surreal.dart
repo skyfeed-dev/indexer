@@ -54,6 +54,9 @@ DEFINE FIELD links.* ON TABLE post TYPE string;
 DEFINE FIELD langs ON TABLE post TYPE option<array>;
 DEFINE FIELD langs.* ON TABLE post TYPE string;
 
+DEFINE FIELD tags ON TABLE post TYPE option<array>;
+DEFINE FIELD tags.* ON TABLE post TYPE string;
+
 DEFINE FIELD labels ON TABLE post TYPE option<array>;
 DEFINE FIELD labels.* ON TABLE post TYPE string;
 
