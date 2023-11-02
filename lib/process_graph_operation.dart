@@ -7,7 +7,10 @@ import 'package:lib5/lib5.dart';
 
 import 'logger.dart';
 
-final hashtagRegex = RegExp(r'( |\n)#([a-zA-Z0-9\-]{2,100})');
+// final hashtagRegex = RegExp(r'( |\n)#([a-zA-Z0-9\-]{2,100})');
+int i = 0;
+
+// ! can do: 1000 reqs/sec
 
 Future<void> processGraphOperation(
   String repo,
@@ -18,12 +21,16 @@ Future<void> processGraphOperation(
   required Surreal surreal,
   required bool doRethrow,
 }) async {
+  i++;
+  if (i % 10000 == 0) logger.v('total proc msg $i');
+  // print('processGraphOperation $repo $action $recordType $rkey $block');
+
   try {
     if (action == 'create' || action == 'update') {
       block!;
       ensureValidRKey(rkey, isEscaped: recordType == 'app.bsky.feed.generator');
       if (recordType == 'app.bsky.actor.profile') {
-        surreal.db.change(didToKey(repo), {
+        surreal.db.merge(didToKey(repo), {
           'avatar': prepareBlob(surreal, block['avatar']),
           'banner': prepareBlob(surreal, block['banner']),
           'displayName': block['displayName'],
@@ -63,14 +70,15 @@ Future<void> processGraphOperation(
           'createdAt': getCreatedAt(block),
         };
 
-        for (final match
+        /* for (final match
             in hashtagRegex.allMatches(' ${block['text']} '.toLowerCase())) {
           final hashtag = match.group(2)!.toLowerCase();
 
           surreal.db.query(
             "RELATE hashtag:`$hashtag`->usedin->$id CONTENT { createdAt: '${getCreatedAt(post)}', id: '${rkey}_${didToKey(repo, false)}_$hashtag' };",
-          );
-        }
+            did handle displayName description
+          );          
+        } */
 
         block.remove('text');
         block.remove('\$type');
@@ -120,7 +128,7 @@ Future<void> processGraphOperation(
                 'at://did:plc:none/does.not.exist/test');
 
             surreal.db.query(
-              "RELATE $id->quote->${post['record']} CONTENT { createdAt: '${getCreatedAt(post)}', id: '${rkey}_${didToKey(repo, false)}' };",
+              "RELATE $id->quotes->${post['record']} SET id = '${rkey}_${didToKey(repo, false)}';",
             );
 
             block['embed'].remove('record');
@@ -196,53 +204,53 @@ Future<void> processGraphOperation(
           block.remove('entities');
         }
         if (block.isNotEmpty) {
-          logger.d('skipped unknown fields for $id: $block');
+          logger.d('unknown $id: $block');
         }
         // TODO Create graph relations for mentions
         surreal.db.update(id, post);
 
         if (post.containsKey('parent')) {
           surreal.db.query(
-            "RELATE ${didToKey(repo)}->replies->$id CONTENT { createdAt: '${getCreatedAt(post)}', id: '${rkey}_${didToKey(repo, false)}' };",
+            "RELATE ${didToKey(repo)}->replies->$id SET id = '${rkey}_${didToKey(repo, false)}';",
           );
 
           surreal.db.query(
-            "RELATE $id->replyto->${post['parent']} CONTENT { createdAt: '${getCreatedAt(post)}', id: '${rkey}_${didToKey(repo, false)}' };",
+            "RELATE $id->replyto->${post['parent']} SET id = '${rkey}_${didToKey(repo, false)}';",
           );
         } else {
           surreal.db.query(
-            "RELATE ${didToKey(repo)}->posts->$id CONTENT { createdAt: '${getCreatedAt(post)}', id: '${rkey}_${didToKey(repo, false)}' };",
+            "RELATE ${didToKey(repo)}->posts->$id SET id = '${rkey}_${didToKey(repo, false)}';",
           );
         }
       } else if (recordType == 'app.bsky.graph.follow') {
         final subjectDID = block['subject'];
 
         surreal.db.query(
-          "RELATE ${didToKey(repo)}->follow->${didToKey(subjectDID)} CONTENT { createdAt: '${getCreatedAt(block)}', id: '${rkey}_${didToKey(repo, false)}' };",
+          "RELATE ${didToKey(repo)}->follow->${didToKey(subjectDID)} SET id = '${rkey}_${didToKey(repo, false)}', createdAt = '${getCreatedAt(block)}';",
         );
       } else if (recordType == 'app.bsky.graph.block') {
         final subjectDID = block['subject'];
 
         surreal.db.query(
-          "RELATE ${didToKey(repo)}->block->${didToKey(subjectDID)} CONTENT { createdAt: '${getCreatedAt(block)}', id: '${rkey}_${didToKey(repo, false)}' };",
+          "RELATE ${didToKey(repo)}->block->${didToKey(subjectDID)} SET id = '${rkey}_${didToKey(repo, false)}', createdAt = '${getCreatedAt(block)}';",
         );
       } else if (recordType == 'app.bsky.feed.like') {
         final String subjectUri = block['subject']['uri'];
 
         surreal.db.query(
-          "RELATE ${didToKey(repo)}->like->${atUriToPostOrFeedId(subjectUri)} CONTENT { createdAt: '${getCreatedAt(block)}', id: '${rkey}_${didToKey(repo, false)}' };",
+          "RELATE ${didToKey(repo)}->like->${atUriToPostOrFeedId(subjectUri)} SET id = '${rkey}_${didToKey(repo, false)}', createdAt = '${getCreatedAt(block)}';",
         );
       } else if (recordType == 'app.bsky.feed.repost') {
         final subjectUri = block['subject']['uri'];
 
         surreal.db.query(
-          "RELATE ${didToKey(repo)}->repost->${atUriToPostId(subjectUri)} CONTENT { createdAt: '${getCreatedAt(block)}', id: '${rkey}_${didToKey(repo, false)}' };",
+          "RELATE ${didToKey(repo)}->repost->${atUriToPostId(subjectUri)} SET id = '${rkey}_${didToKey(repo, false)}', createdAt = '${getCreatedAt(block)}';",
         );
       } else if (recordType == 'app.bsky.graph.listitem') {
         final subjectDID = block['subject'];
 
         surreal.db.query(
-          "RELATE ${atUriToListId(block['list'])}->listitem->${didToKey(subjectDID)} CONTENT { createdAt: '${getCreatedAt(block)}', id: '${rkey}_${didToKey(repo, false)}' };",
+          "RELATE ${atUriToListId(block['list'])}->listitem->${didToKey(subjectDID)} SET id = '${rkey}_${didToKey(repo, false)}', createdAt = '${getCreatedAt(block)}';",
         );
         // final listId = atUriToListId(block['list']);
         // surreal.db.change(listId, {});
@@ -282,7 +290,7 @@ Future<void> processGraphOperation(
           "DELETE replyto:${rkey}_${didToKey(repo, false)};",
         );
         surreal.db.query(
-          "DELETE quote:${rkey}_${didToKey(repo, false)};",
+          "DELETE quotes:${rkey}_${didToKey(repo, false)};",
         );
       } else if (recordType == 'app.bsky.graph.listitem') {
         surreal.db.query(
@@ -329,7 +337,8 @@ String getCreatedAt(Map record) {
   final dt = DateTime.parse(dtStr).toUtc();
   if (dt.isAfter(DateTime.now().toUtc().add(Duration(seconds: 60)))) {
     final newStr = DateTime.now().toUtc().toIso8601String();
-    logger.v('overriding timestamp $dtStr -> $newStr');
+    logger.v('ts');
+    // logger.v('overriding timestamp $dtStr -> $newStr');
     return newStr;
   }
   return dt.toIso8601String();
