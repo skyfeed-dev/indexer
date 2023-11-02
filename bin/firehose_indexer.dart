@@ -29,7 +29,7 @@ void main(List<String> arguments) async {
   }
 
   final uri =
-      'wss://bsky.social/xrpc/com.atproto.sync.subscribeRepos${cursor == null ? '' : '?cursor=$cursor'}';
+      'wss://bsky.network/xrpc/com.atproto.sync.subscribeRepos${cursor == null ? '' : '?cursor=$cursor'}';
 
   logger.i('WebSocket URI: $uri');
 
@@ -42,7 +42,7 @@ void main(List<String> arguments) async {
     try {
       await processMessage(data[0] as Map, data[1] as Map);
     } catch (e, st) {
-      logger.e('Processing event ${json.encode(data)} failed', e, st);
+      logger.e('Processing event ${json.encode(data)} failed $e $st');
     }
   });
 }
@@ -54,10 +54,11 @@ Future<void> processMessage(Map header, Map obj) async {
 
   if (header['t'] != '#commit') {
     if (header['t'] == '#handle') {
-      surreal.db.change(didToKey(obj['did']), {'handle': obj['handle']});
+      surreal.db.merge(didToKey(obj['did']), {'handle': obj['handle']});
 
       return;
     } else {
+      // TODO Handle tombstones
       throw 'INVALID HEADER $header';
     }
   }
@@ -131,6 +132,7 @@ Future<void> processMessage(Map header, Map obj) async {
 }
 
 void ensureOnlyKeys(Map map, Set<String> keys) {
+  return;
   for (final key in map.keys) {
     if (!keys.contains(key)) {
       throw 'Invalid key: $key in $map';
