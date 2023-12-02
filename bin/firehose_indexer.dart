@@ -20,7 +20,7 @@ void main(List<String> arguments) async {
   await surreal.init(env);
 
   final List cursorRes = await surreal.db.select(
-    'cursor:`bsky.social`',
+    'cursor:`bsky.network`',
   );
 
   String? cursor;
@@ -124,7 +124,7 @@ Future<void> processMessage(Map header, Map obj) async {
   if (messageCounter % 1000 == 0) {
     Future.delayed(Duration(seconds: 30)).then((value) {
       surreal.db.update(
-        'cursor:`bsky.social`',
+        'cursor:`bsky.network`',
         {'cursor': cursor},
       );
     });

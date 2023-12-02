@@ -28,7 +28,9 @@ Future<void> processGraphOperation(
   try {
     if (action == 'create' || action == 'update') {
       block!;
-      ensureValidRKey(rkey, isEscaped: recordType == 'app.bsky.feed.generator');
+      ensureValidRKey(rkey,
+          isEscaped: recordType == 'app.bsky.feed.generator' ||
+              recordType == 'app.bsky.graph.listitem');
       if (recordType == 'app.bsky.actor.profile') {
         surreal.db.merge(didToKey(repo), {
           'avatar': prepareBlob(surreal, block['avatar']),
@@ -294,7 +296,7 @@ Future<void> processGraphOperation(
         );
       } else if (recordType == 'app.bsky.graph.listitem') {
         surreal.db.query(
-          "DELETE listitem:${rkey}_${didToKey(repo, false)};",
+          "DELETE listitem:`${rkey}_${didToKey(repo, false)}`;",
         );
       } else if (recordType == 'app.bsky.feed.post') {
         surreal.db.query(
