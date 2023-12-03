@@ -8,6 +8,7 @@ class Surreal {
   late final SurrealDB db;
 
   Future<void> init(DotEnv env) async {
+    print('[SurrealDB] URL: ${env['SURREAL_URL']!}');
     db = SurrealDB(
       env['SURREAL_URL']!,
       onError: (e) => logger.e(e),
@@ -17,8 +18,10 @@ class Surreal {
     );
     db.connect();
     await db.wait();
-    await db.use(env['SURREAL_NS'] ?? 'atproto', env['SURREAL_DB'] ?? 'bsky');
-    await db.signin(user: env['SURREAL_USER']!, pass: env['SURREAL_PASS']!);
+    await db.use(env['SURREAL_NS'] ?? 'bsky', env['SURREAL_DB'] ?? 'bsky');
+    if (env['SURREAL_USER'] != null) {
+      await db.signin(user: env['SURREAL_USER']!, pass: env['SURREAL_PASS']!);
+    }
   }
 }
 

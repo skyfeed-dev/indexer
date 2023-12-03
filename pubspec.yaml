@@ -10,7 +10,7 @@ dependencies:
   lib5: ^0.1.0
   surrealdb:
     git: https://github.com/redsolver/surrealdb_flutter.git
-  cbor: ^5.1.2
+  cbor: ^6.1.1
   web_socket_channel: ^2.4.0
   crypto: ^3.0.3
   alfred: ^1.1.0+1

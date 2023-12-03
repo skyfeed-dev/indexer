@@ -154,7 +154,19 @@ SELECT
   GROUP BY out
 ;
 
+DEFINE TABLE following_count_view AS
+SELECT
+  count() AS c
+  FROM follow
+  GROUP BY in
+;
 
+DEFINE TABLE follower_count_view AS
+SELECT
+  count() AS c
+  FROM follow
+  GROUP BY out
+;
 
 INFO FOR DB;
 

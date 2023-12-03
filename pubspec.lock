@@ -101,10 +101,10 @@ packages:
     dependency: "direct main"
     description:
       name: cbor
-      sha256: a44a7e6e40d0b196b04af30282661ffc5d6b8b2bcb1d5200f422194c6e0f58fb
+      sha256: eccfcb3c16a46146517f6970d4d6df94bfd443e048d5825e85b9e23cc08d1132
       url: "https://pub.dev"
     source: hosted
-    version: "5.1.2"
+    version: "6.1.1"
   clock:
     dependency: transitive
     description:
@@ -117,10 +117,10 @@ packages:
     dependency: transitive
     description:
       name: collection
-      sha256: "4a07be6cb69c84d677a6c3096fcf960cc3285a8330b4603e0d463d15d9bd934c"
+      sha256: ee67cb0715911d28db6bf4af1026078bd6f0128b07a5f66fb2ed94ec6783c09a
       url: "https://pub.dev"
     source: hosted
-    version: "1.17.1"
+    version: "1.18.0"
   convert:
     dependency: transitive
     description:
@@ -465,6 +465,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.10.0"
+  sprintf:
+    dependency: transitive
+    description:
+      name: sprintf
+      sha256: "1fc9ffe69d4df602376b52949af107d8f5703b77cda567c4d7d86a0693120f23"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   stack_trace:
     dependency: transitive
     description:
@@ -494,10 +502,10 @@ packages:
     description:
       path: "."
       ref: HEAD
-      resolved-ref: "7fac702e6bcfc54818ef153835f800d0ee9dd4c4"
+      resolved-ref: a7ee1e3a5094a595a327087b2f04aa076c1d9c9f
       url: "https://github.com/redsolver/surrealdb_flutter.git"
     source: git
-    version: "0.6.2"
+    version: "0.7.0"
   term_glyph:
     dependency: transitive
     description:
@@ -542,10 +550,10 @@ packages:
     dependency: transitive
     description:
       name: typed_data
-      sha256: "26f87ade979c47a150c9eaab93ccd2bebe70a27dc0b4b29517f2904f04eb11a5"
+      sha256: facc8d6582f16042dd49f2463ff1bd6e2c9ef9f3d5da3d9b087e244a7b564b3c
       url: "https://pub.dev"
     source: hosted
-    version: "1.3.1"
+    version: "1.3.2"
   universal_io:
     dependency: transitive
     description:
@@ -554,6 +562,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  uuid:
+    dependency: transitive
+    description:
+      name: uuid
+      sha256: b715b8d3858b6fa9f68f87d20d98830283628014750c2b09b6f516c1da4af2a7
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   vm_service:
     dependency: transitive
     description:
