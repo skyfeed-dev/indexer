@@ -12,6 +12,8 @@ int i = 0;
 
 // ! can do: 1000 reqs/sec
 
+final recordIdRegex = RegExp(r'^[a-zA-Z0-9_]+:[a-zA-Z0-9_]+$');
+
 Future<void> processGraphOperation(
   String repo,
   String action,
@@ -66,9 +68,15 @@ Future<void> processGraphOperation(
       } else if (recordType == 'app.bsky.feed.post') {
         final id = 'post:${rkey}_${didToKey(repo, false)}';
 
+        var text = block['text'].toString();
+
+        if (recordIdRegex.hasMatch(text)) {
+          text = text.replaceAll(':', '%3A%');
+        }
+
         final post = <String, dynamic>{
           'author': didToKey(repo),
-          'text': block['text'],
+          'text': text,
           'createdAt': getCreatedAt(block),
         };
 
